@@ -18,7 +18,7 @@ module.exports=function vaidateLoginInput(data){
 
     if(Validator.isEmpty(data.email)){
 
-        errors.email='Email field is required';
+        errors.email='Email field is invalid';
     }
 
    
