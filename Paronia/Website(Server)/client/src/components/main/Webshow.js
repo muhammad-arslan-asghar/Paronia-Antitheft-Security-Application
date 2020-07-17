@@ -5,6 +5,7 @@ import {Section} from 'react-animated-text';
 import Mapwrap from '../main/MapContainer';
 import {Redirect} from "react-router-dom";
 import axios from 'axios';
+ import swal from "sweetalert";
 
 export default class Webshow extends Component {
 
@@ -18,9 +19,47 @@ export default class Webshow extends Component {
 		  EAudio:false,
 		  Video:false,
 		  Picture:false,
-		  command:''
+		  callLogs:false,
+		  command:'',
+		  email:''
         };
-      }
+	  }
+	  componentDidMount(){
+		  const token=localStorage.getItem('jwt');
+		  const token1=JSON.parse(token);
+			const token2=JSON.parse(token1.config.data);
+			console.log(token2.email)
+			this.setState({email:token2.email})
+	  }
+
+	  Logout = () => {
+		swal("Are your sure SignOut?", {
+		  buttons: {
+			nope: {
+			  text: "Let me back",
+			  value: "nope"
+			},
+			sure: {
+			  text: "I'm, Sure",
+			  value: "sure"
+			}
+		  }
+		}).then(value => {
+		  switch (value) {
+			case "sure":
+			  swal(" SignOut Successfully", "success").then(val => {
+				localStorage.removeItem("jwt");
+				return this.props.history.push("/login");
+			  });
+			  break;
+			case "nope":
+			  swal("Ok", "success");
+			  break;
+			default:
+			  swal("Got away safely!");
+		  }
+		});
+	  };
 
 	  handlechange=(name)=>event=>{
 		  console.log("WOWWWWWWW")
@@ -35,32 +74,38 @@ export default class Webshow extends Component {
 	  clickSubmit = event =>{
 		  event.preventDefault();
 		  if(this.state.command== "Picture"){
-			axios.get('http://localhost:5000/api/commands/pictaken')
+			axios.get('http://localhost:5000/api/commands/pictaken?email='+this.state.email)
 			.then()
 			 .catch();
 		  }
 		  if(this.state.command== "SAudio"){
-			axios.get('http://localhost:5000/api/commands/saudtaken')
+			axios.get('http://localhost:5000/api/commands/saudtaken?email='+this.state.email)
 			.then()
 			 .catch();
 		  }
 		  if(this.state.command== "EAudio"){
-			axios.get('http://localhost:5000/api/commands/eaudtaken')
+			axios.get('http://localhost:5000/api/commands/eaudtaken?email='+this.state.email)
 			.then()
 			 .catch();
 		  }
 		  if(this.state.command== "GPS"){
-			axios.get('http://localhost:5000/api/commands/gpstaken')
+			axios.get('http://localhost:5000/api/commands/gpstaken?email='+this.state.email)
 			.then()
 			 .catch();
 		  }
 		  if(this.state.command== "Video"){
-			axios.get('http://localhost:5000/api/commands/alarmtaken')
+			
+			axios.get('http://localhost:5000/api/commands/alarmtaken?email='+this.state.email)
 			.then()
 			 .catch();
 		  }
 		  if(this.state.command== "location"){
-			axios.get('http://localhost:5000/api/commands/loctaken')
+			axios.get('http://localhost:5000/api/commands/loctaken?email='+this.state.email)
+			.then()
+			 .catch();
+		  }
+		  if(this.state.command== "callLogs"){
+			axios.get('http://localhost:5000/api/commands/getcallLogs?email='+this.state.email)
 			.then()
 			 .catch();
 		  }
@@ -91,24 +136,22 @@ export default class Webshow extends Component {
 					<ul className="dropdown-menu" aria-labelledby="dropdown01">
 						<li><a className="dropdown-item" href="galleryphoto">Photo</a></li>
 						<li><a className="dropdown-item" href="galleryaudio">Audio</a></li>
-                        <li><a className="dropdown-item" href="galleryvideo">Video</a></li>
+                        {/* <li><a className="dropdown-item" href="galleryvideo">Video</a></li> */}
 					</ul>
 			  </li>
 
 			  <li className="nav-item dropdown active">
 					<a className="nav-link dropdown-toggle" href="#" id="dropdown02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Phone Monitor</a>
 					<ul className="dropdown-menu" aria-labelledby="dropdown02">
-						<li><a className="dropdown-item" href="portfolio-1.html">Call Logs</a></li>
-						<li><a className="dropdown-item" href="portfolio-2.html">Messages</a></li>
+						<li><a className="dropdown-item" href="gallerylogcalls">Call Logs</a></li>
+						{/* <li><a className="dropdown-item" href="portfolio-2.html">Messages</a></li> */}
 						
 					</ul>
 			  </li>
 			   
-			   <li className="nav-item dropdown">
-         <a className="nav-link " href="#" id="dropdown01"  >About Us</a>
-			  </li>
-			  
-			   <li className="nav-item"><a className="nav-link" href="contact.html">Contact</a></li>
+			   
+			   
+			   <li className="nav-item"><a className="nav-link" href="#" onClick={() => this.Logout()}  >LogOUT</a></li>
 			</ul>
 		</div>
 	</div>
@@ -127,7 +170,7 @@ export default class Webshow extends Component {
                         <b>Mobile Security.</b>
                     </span>
                 </h2>
-                <p>I must explain to you how all this mistaken idea of denouncing pleasure and praising pain <br/>was born and I will give you a complete account of the system</p>
+                <p>Protect Your Mobile and Data <br/>Locate Your Mobile</p>
 			</div>
 		</div>
 	</div>
@@ -147,6 +190,7 @@ export default class Webshow extends Component {
   <option value="SAudio">Start Audio</option>
   <option value="EAudio">End Audio</option>
   <option value="Video">Alarm</option>
+  <option value="callLogs">Call Logs</option>
 </select>
 <button type="button" class="btn btn-danger" onClick={this.clickSubmit} style={{marginLeft:50,marginBottom:50} } >Send Command</button>
 
@@ -184,52 +228,52 @@ export default class Webshow extends Component {
 	<div class="container">
 		<div class="row">
 			<div class="col-lg-6">
-				<h2 class="mb-2 ">Core Services.</h2>
-				<p class="mb-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Necessitatibus, totam ipsa quia hic odit a sit laboriosam voluptatem in, blanditiis.</p>
+				<h2 class="mb-2 ">Core Services</h2>
+				<p class="mb-5">Remote control from internet.</p>
 			</div>
 		</div>
 		
 		<div class="row">
 			<div class="col-lg-4">
 				<div class="service-item mb-5" data-aos="fade-left" >
-                <i class="fas fa-mobile-alt "style={{ fontSize: '1.75em' }}></i>
+                <i class=" "style={{ fontSize: '1.75em' }}></i>
 					<h4 class="my-3">Surveillance</h4>
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iusto, earum.</p>
+					<p>Keep an eye on Your Mobile </p>
 				</div>
 			</div>
 			<div class="col-lg-4">
 				<div class="service-item mb-5" data-aos="fade-left"  data-aos-delay="450">
 					<i class="ti-announcement"></i>
-					<h4 class="my-3">Data Backup</h4>
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iusto, earum.</p>
+					<h4 class="my-3">Auto Task</h4>
+					<p>Location will be shared </p>
 				</div>
 			</div>
 			<div class="col-lg-4">
 				<div class="service-item mb-5 mb-lg-0" data-aos="fade-left"  data-aos-delay="750">
 					<i class="ti-layers"></i>
-					<h4 class="my-3">Mobile Security</h4>
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iusto, earum.</p>
+					<h4 class="my-3">Take Pictures of Theif</h4>
+					<p>Take pictures by sending command</p>
 				</div>
 			</div>
 			<div class="col-lg-4">
 				<div class="service-item" data-aos="fade-left"  data-aos-delay="750">
 					<i class="ti-anchor"></i>
 					<h4 class="my-3">Ring Mobile</h4>
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iusto, earum.</p>
+					<p>Alarm the mobile to get the misplaced mobile</p>
 				</div>
 			</div>
 			<div class="col-lg-4">
 				<div class="service-item mb-5" data-aos="fade-left"  data-aos-delay="950">
 					<i class="ti-video-camera"></i>
-					<h4 class="my-3">Messaging Service</h4>
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iusto, earum.</p>
+					<h4 class="my-3">Audio Recording of Mobile</h4>
+					<p>Start and Stop the recording of the mobile</p>
 				</div>
 			</div>
 			<div class="col-lg-4">
 				<div class="service-item mb-5 mb-lg-0" data-aos="fade-left"  data-aos-delay="1050">
 					<i class="ti-android"></i>
-					<h4 class="my-3">Wipe Data</h4>
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iusto, earum.</p>
+					<h4 class="my-3">Monitor Device</h4>
+					<p>Get call logs of mobile any time</p>
 				</div>
 			</div>
 		</div>

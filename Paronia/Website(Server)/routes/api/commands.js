@@ -5,10 +5,14 @@ var formidable = require('formidable');
 const Product=require('../../models/imageupload');
 const Audio=require('../../models/audioupload');
 const Location=require('../../models/locationupload');
+const Calls=require('../../models/callupload');
+const User=require('../../models/User')
 var fs = require ('fs');
 const mongoose = require("mongoose");
 const multer = require('multer');
 const uuidv4 = require('uuid/v4');
+var channel = require('./users');
+
 
 
 var channels_client = new Pusher({
@@ -39,13 +43,34 @@ var channels_client = new Pusher({
   //--------------------------saveaudio-------------------
 
   router.post('/getaud', upload.single('audio'), (req, res) => {
-    console.log("ServerRunning");
-     console.log(req.file.path);
-    var new_img = new Audio;
-    new_img.productImage.data = req.file.path;
-    new_img.productImage.ContentType = 'audio/mp3';
-    new_img.save();
-    res.json({ message: 'New Audio added to the db!' });
+    
+     User.findOne({email:req.body.email}).then(user=>{
+       if(!user){
+           errors.email='User not found';
+           return res.json(errors);
+       }
+ 
+       console.log("ServerRunning");
+       console.log(req.file.path);
+       console.log(req.body.email);
+       var new_img = new Audio;
+       new_img.productImage.data = req.file.path;
+       new_img.productImage.ContentType = 'audio/mp3';
+       new_img.dataof = user;
+       new_img.save();
+       res.json({ message: 'New Audio added to the db!' });
+   
+   
+   
+   
+   });
+
+
+
+
+
+
+
   
       
 
@@ -56,7 +81,7 @@ var channels_client = new Pusher({
 //-----------------------------------Get------------------------
 
   router.get('/getpics',function(req,res){ 
-    // console.log("WOW");
+     
     const pics=Product.find()
     .select("productImage")
     .then(pics=>{res.json(pics)})
@@ -68,15 +93,38 @@ var channels_client = new Pusher({
 
 
 });
+router.get('/test',(req,res)=> res.json({msg: "Users Know"}));
+
 
 router.get('/getloc',function(req,res){ 
-    
-  const loc=Location.find({}).sort({ _id: -1 }).limit(1)
-  .select("location")
-  .then(loc=>{
-    res.json(loc[0])
+
+  User.findOne({email:req.query.email}).then(user=>{
+    if(!user){
+        errors.email='User not found';
+        return res.json(errors);
+    }
+  
+    console.log("WOW : "+req.query.email);
+    Location.find({dataof:user}).sort({ _id: -1 }).limit(1).select("location")
+     
+     .exec((err,calls)=>{
+         if(err){
+           return res.status(400).json({error:err});
+         }
+         return res.json(calls[0]);
+     })
+
+
+
   })
-  .catch(err=>console.log(err));
+
+    
+  // const loc=Location.find({}).sort({ _id: -1 }).limit(1)
+  // .select("location")
+  // .then(loc=>{
+  //   res.json(loc[0])
+  // })
+  // .catch(err=>console.log(err));
   
 
 
@@ -87,11 +135,35 @@ return ;
 
 });
 router.get('/getaud',function(req,res){ 
+
+  User.findOne({email:req.query.email}).then(user=>{
+    if(!user){
+        errors.email='User not found';
+        return res.json(errors);
+    }
+  
+    console.log("WOW : "+req.query.email);
+    Audio.find({dataof:user})
+    .select("productImage")
+     
+     .exec((err,calls)=>{
+         if(err){
+           return res.status(400).json({error:err});
+         }
+         return res.json(calls);
+     })
+
+
+
+  })
+
+
+
     
-  const loc=Audio.find()
-  .select("productImage")
-  .then(loc=>{res.json(loc)})
-  .catch(err=>console.log(err));
+  // const loc=Audio.find()
+  // .select("productImage")
+  // .then(loc=>{res.json(loc)})
+  // .catch(err=>console.log(err));
   
 
 
@@ -102,6 +174,49 @@ return ;
 
 });
 
+//==================Call LOgs GET========================
+router.get('/getcall',function(req,res){ 
+    
+  User.findOne({email:req.query.email}).then(user=>{
+    if(!user){
+        errors.email='User not found';
+        return res.json(errors);
+    }
+    console.log("User Found"+user)
+    console.log("WOW : "+req.query.email);
+    Calls.find({dataof:user})
+     
+     .exec((err,calls)=>{
+         if(err){
+           return res.status(400).json({error:err});
+         }
+         return res.json(calls);
+     })
+
+
+
+  })
+
+
+  // const loc1=Calls.find()
+  // // .select("productImage")
+  // .then(loc1=>{res.json(loc1)})
+  // .catch(err=>console.log(err));
+  
+
+
+
+
+
+
+
+});
+
+
+
+
+
+
 
 
 
@@ -109,8 +224,8 @@ return ;
 
 
   router.get('/pictaken',function(req,res){ 
-    
-    channels_client.trigger('my-channel', 'my-event-pic',  "my-channel"
+    console.log("Channel :"+req.query.email)
+    channels_client.trigger(req.query.email, 'my-event5',  "my-channel"
     );
     
  
@@ -125,8 +240,8 @@ return ;
 
 
 router.get('/saudtaken',function(req,res){ 
-    
-  channels_client.trigger('my-channel', 'my-event-saud',  "my-channel"
+  console.log("Channel :"+req.query.email)
+  channels_client.trigger(req.query.email, 'my-event3',  "my-channel"
   );
   
 
@@ -138,8 +253,8 @@ return ;
 
 
 router.get('/eaudtaken',function(req,res){ 
-    
-  channels_client.trigger('my-channel', 'my-event-eaud',  "my-channel"
+  console.log("Channel :"+req.query.email)
+  channels_client.trigger(req.query.email, 'my-event4',  "my-channel"
   );
   
 
@@ -152,8 +267,8 @@ return ;
 
 
 router.get('/loctaken',function(req,res){ 
-    
-  channels_client.trigger('my-channel', 'my-event-loc',  "my-channel"
+  console.log("Channel :"+req.query.email)
+  channels_client.trigger(req.query.email, 'my-event2',  "my-channel"
   );
   
 
@@ -163,8 +278,8 @@ return ;
 
 });
 router.get('/gpstaken',function(req,res){ 
-    
-  channels_client.trigger('my-channel', 'my-event-gps',  "my-channel"
+  console.log("Channel :"+req.query.email)
+  channels_client.trigger(req.query.email, 'my-event1',  "my-channel"
   );
   
 
@@ -174,10 +289,24 @@ return ;
 
 });
 router.get('/alarmtaken',function(req,res){ 
-    
-  channels_client.trigger('my-channel', 'my-event-alarm',  "my-channel"
+  var chnl=channel.chnl;  
+  console.log("Channel :"+req.query.email)
+    // var c=chnl;
+  channels_client.trigger( req.query.email, 'my-event-alarm',  "my-channel"
   );
   
+
+
+return ;
+
+
+});
+router.get('/getcallLogs',function(req,res){ 
+  // console.log("Channel :"+chnl)
+  console.log("Channel call :"+req.query.email)
+channels_client.trigger(req.query.email, 'my-event-call',  "my-channel"
+);
+
 
 
 return ;
@@ -193,9 +322,24 @@ return ;
 
 
 router.post('/getloc',function(req,res){ 
+
+
+
+  User.findOne({email:req.body.email}).then(user=>{
+    if(!user){
+        errors.email='User not found';
+        return res.json(errors);
+    }
+
+    // console.log(user)
+    req.user = user
+    // console.log(req.user)
+
       
     // channels_client.trigger('my-channel', 'my-event2',  "my-channel"
     // );
+    console.log("Location")
+    // console.log(req.body.email);
     console.log(req.body.longitude);
     console.log(req.body.latitude);
     var lng=req.body.longitude;
@@ -211,8 +355,10 @@ router.post('/getloc',function(req,res){
       loc._id = new mongoose.Types.ObjectId();
       loc.location.longitude=req.body.longitude;
       loc.location.latitude=req.body.latitude;
-   
+      loc.dataof = user;   
+      
 
+      // console.log("loc",loc)
     loc.save((err,result)=>{
       if(err){
         return res.json({error:err})
@@ -229,6 +375,84 @@ router.post('/getloc',function(req,res){
 
 
  return;
+
+
+
+
+
+
+});
+
+  
+
+});
+
+
+
+//......................PostCalls...................................
+router.post('/call',function(req,res){ 
+      
+  // channels_client.trigger('my-channel', 'my-event2',  "my-channel"
+
+  // );
+  console.log("Call log: "+req.body.email);
+  User.findOne({email:req.body.email}).then(user=>{
+    if(!user){
+        errors.email='User not found';
+        return res.json(errors);
+    }
+
+    
+  console.log("call")
+  console.log(req.body.name);
+  console.log(req.body.number);
+
+  console.log(req.body.type);
+  console.log(req.body.duration);
+//   var lng=req.body.longitude;
+//   var lat=req.body.latitude;
+
+    
+
+  const loc1=new Calls();
+
+
+  
+    loc1._id = new mongoose.Types.ObjectId();
+    loc1.name=req.body.name;
+    loc1.number=req.body.number;
+    loc1.type=req.body.type;
+    loc1.duration=req.body.duration;
+    loc1.dataof=user;
+    
+ 
+
+  loc1.save((err,result)=>{
+    if(err){
+      return res.json({error:err})
+    }
+     res.json(result);
+
+  })
+
+
+
+  // res.json(lng,lat);
+  
+  console.log("Save Call data");
+
+
+
+
+
+
+});
+
+
+
+
+
+return;
 
 
 });

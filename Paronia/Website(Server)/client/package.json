@@ -11,6 +11,7 @@
     "fetch": "^1.1.0",
     "google-maps-react": "^2.0.2",
     "jquery": "^3.4.1",
+    "markers-on-map-react": "^1.2.0",
     "react": "^16.12.0",
     "react-animated-text": "^0.1.4",
     "react-dom": "^16.11.0",
@@ -19,7 +20,8 @@
     "react-scripts": "3.2.0",
     "react-sidebar": "^3.0.2",
     "redux": "^4.0.4",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "sweetalert": "^2.1.2"
   },
   "scripts": {
     "start": "react-scripts start",

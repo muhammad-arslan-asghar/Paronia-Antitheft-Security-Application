@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios';
+import swal from "sweetalert";
 import classnames from 'classnames';
 import css from '../main/WebshowCss/style.css';
 
@@ -34,7 +35,10 @@ import css from '../main/WebshowCss/style.css';
         }
         
         axios.post('/api/users/register',newUser)
-        .then(res=>this.setState({errors: res.data}))
+        .then(res=> { if(res.data.isVerified==false){
+          swal("Sign up Successfully", "success");
+
+        }   this.setState({errors: res.data})})
          .catch(err=>console.log(""));
     }
 
@@ -74,10 +78,6 @@ import css from '../main/WebshowCss/style.css';
 			  </li>
 
 			  
-			   <li className="nav-item dropdown">
-         <a className="nav-link " href="forgot" id="dropdown01"  >About Us</a>
-			  </li>
-			   <li className="nav-item"><a className="nav-link" href="contact.html">Contact</a></li>
 			</ul>
 		</div>
 	</div>

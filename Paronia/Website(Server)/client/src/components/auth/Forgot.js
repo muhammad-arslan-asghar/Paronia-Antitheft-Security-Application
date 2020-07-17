@@ -64,10 +64,7 @@ import classnames from 'classnames';
 			  </li>
 
 			  
-			   <li className="nav-item dropdown">
-         <a className="nav-link " href="forgot" id="dropdown01"  >About Us</a>
-			  </li>
-			   <li className="nav-item"><a className="nav-link" href="contact.html">Contact</a></li>
+			  
 			</ul>
 		</div>
 	</div>

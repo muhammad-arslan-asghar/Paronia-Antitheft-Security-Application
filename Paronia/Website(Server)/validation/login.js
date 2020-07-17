@@ -25,7 +25,7 @@ module.exports=function vaidateLoginInput(data){
 
     if(Validator.isEmpty(data.password)){
 
-        errors.password='Password field is required';
+        errors.password='Password field is invalid';
     }
 
 

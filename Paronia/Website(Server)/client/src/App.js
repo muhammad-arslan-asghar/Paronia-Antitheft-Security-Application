@@ -13,9 +13,10 @@ import Dashboard from './components/main/Dashboard';
 import Surveillance from './components/main/Surveillance';
 import CallLogs from './components/main/CallLogs';
 import Webshow from './components/main/Webshow';
-import galleryphotos from './components/main/gallery/photo'
-import galleryvideos from './components/main/gallery/video'
-import galleryaudios from './components/main/gallery/audio'
+import galleryphotos from './components/main/gallery/photo';
+import galleryvideos from './components/main/gallery/video';
+import galleryaudios from './components/main/gallery/audio';
+import gallerylogcalls from './components/main/gallery/logcalls';
 import store from './store';
 
 import './App.css';
@@ -27,7 +28,7 @@ function App() {
     <Router>
     <div className="App">
       {/* <Navbar/> */}
-      <Route exact path="/" component={Landing}/>
+      <Route exact path="/" component={Login}/>
       <div className="container"> 
       <Route exact path="/register" component={Register}  />
       <Route exact path="/forgot" component={Forgot}  />
@@ -39,6 +40,7 @@ function App() {
       <Route path="/galleryphoto" component={galleryphotos} />
       <Route path="/galleryvideo" component={galleryvideos} />
       <Route path="/galleryaudio" component={galleryaudios} />
+      <Route path="/gallerylogcalls" component={gallerylogcalls} />
       
 
       </div>

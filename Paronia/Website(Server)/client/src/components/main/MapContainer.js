@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Map, GoogleApiWrapper,InfoWindow, Marker } from 'google-maps-react';
+import { GoogleMap, GoogleApiWrapper,InfoWindow, Marker } from 'google-maps-react';
 import CurrentLocation from '../main/Maps';
 
     const mapStyles = {
@@ -32,11 +32,15 @@ import CurrentLocation from '../main/Maps';
       };
     
       render() {
+        
         return (
+          
           <CurrentLocation
             centerAroundCurrentLocation
             google={this.props.google}
           >
+            {console.log("WOW: "+CurrentLocation)}
+            {/* <Marker position={{lat: CurrentLocation.lat, lon: CurrentLocation.lng}} /> */}
             <Marker onClick={this.onMarkerClick} name={'current location'} />
             <InfoWindow
               marker={this.state.activeMarker}

@@ -4,13 +4,14 @@ const mongoose = require("mongoose");
 const multer = require('multer');
 const Product=require('../../models/imageupload');
 const Img=require('../../models/imagePathupload');
+// const User=require('../../models/User')
 var imageData=Product.find({});
 const firebase=require('../../config/firebase');
 const formidable=require('formidable');
 var fs = require ('fs');
 const uuidv4 = require('uuid/v4');
 // var admin = require("firebase");
-
+const User=require('../../models/User')
 // console.log(firebase);
 
 // const upload=multer({dest:'./uploads/images'})
@@ -44,29 +45,73 @@ const storage = multer.diskStorage({
   });
 
   router.post('/photo', upload.single('productImage'), (req, res) => {
-    console.log("ServerRunning");
-     console.log(req.file.path);
-    var new_img = new Img;
-    new_img.img.path = req.file.path;
-    new_img.img.contentType = 'image/jpeg';
-    new_img.save();
-    res.json({ message: 'New image added to the db!' });
+    console.log(req.body.email);
+    User.findOne({email:req.body.email}).then(user=>{
+      if(!user){
+          errors.email='User not found';
+          return res.json(errors);
+      }
+
+      console.log("ServerRunning");
+      console.log(req.file.path);
+      console.log(req.body.email);
+     var new_img = new Img;
+     new_img.img.path = req.file.path;
+     new_img.img.contentType = 'image/jpeg';
+     new_img.dataof = user; 
+     new_img.save();
+     res.json({ message: 'New image added to the db!' });
+  
+  
+  
+  
+  });
+    
+    
+    
+    
+    
+    
+    
+    
+
   
       
 
   });
   router.get('/getphoto',function(req, res) {
-    // Img.find(function(err, img) {
-    //     if (err)
-    //         res.send(err);
-    //     // console.log(img);
-    //     res.contentType('json');
-    //     res.send(img);
-    // }).sort({ createdAt: 'desc' });
-    const pics=Img.find()
-    .select("img")
-    .then(pics=>{res.json(pics)})
-    .catch(err=>console.log(err));
+
+
+
+    User.findOne({email:req.query.email}).then(user=>{
+      if(!user){
+          errors.email='User not found';
+          return res.json(errors);
+      }
+      // console.log("User Found"+user)
+      console.log("WOW : "+req.query.email);
+      Img.find({dataof:user})
+       .select("img")
+       .exec((err,pics)=>{
+           if(err){
+             return res.status(400).json({error:err});
+           }
+           return res.json(pics);
+       })
+
+
+
+    })
+
+    
+    //   .then(pics=>{res.json(pics)})
+    // .catch(err=>console.log(err));
+
+
+    // const pics=Img.find()
+    // .select("img")
+    // .then(pics=>{res.json(pics)})
+    // .catch(err=>console.log(err));
 
 });
 

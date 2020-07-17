@@ -42,8 +42,8 @@ class Login extends Component {
         }
          axios.post('/api/users/login',User)
         .then(res=>{
-          
-          if(res.error){
+          console.log(res.data.password);
+          if(res.data.password || res.data.email){
           this.setState({errors:res.data})}
           else{
             this.autenticate(res,()=>{
@@ -64,7 +64,7 @@ class Login extends Component {
 
         if(redirectTorefer){
 
-          return <Redirect to="/webshow"></Redirect>
+           return <Redirect to="/webshow"></Redirect>
         }
         return (
           
@@ -95,10 +95,7 @@ class Login extends Component {
 			  </li>
 
 			  
-			   <li className="nav-item dropdown">
-         <a className="nav-link " href="forgot" id="dropdown01"  >About Us</a>
-			  </li>
-			   <li className="nav-item"><a className="nav-link" href="contact.html">Contact</a></li>
+			  
 			</ul>
 		</div>
 	</div>

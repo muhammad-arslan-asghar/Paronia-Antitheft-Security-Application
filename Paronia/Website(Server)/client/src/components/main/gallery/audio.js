@@ -10,10 +10,16 @@ export default class audio extends Component {
 		};
 	}
 	componentDidMount() {
-		fetch('http://localhost:5000/api/commands/getaud')
+		const token=localStorage.getItem('jwt');
+		  const token1=JSON.parse(token);
+			const token2=JSON.parse(token1.config.data);
+      console.log("Pic"+token2.email)
+      
+      console.log("Hello: "+this.state.email)
+		fetch('http://localhost:5000/api/commands/getaud?email='+token2.email)
 		.then((res) => res.json())
 		.then((data) => {
-		  console.log(data[0].productImage.data);  
+		//   console.log(data[0].productImage.data);  
 			
 		  this.setState({
 			aud: data
@@ -49,29 +55,11 @@ export default class audio extends Component {
 					<ul className="dropdown-menu" aria-labelledby="dropdown01">
 						<li><a className="dropdown-item" href="galleryphoto">Photo</a></li>
 						<li><a className="dropdown-item" href="galleryaudio">Audio</a></li>
-                        <li><a className="dropdown-item" href="galleryvideo">Video</a></li>
+                        {/* <li><a className="dropdown-item" href="galleryvideo">Video</a></li> */}
 					</ul>
 			  </li>
 
-			  <li className="nav-item dropdown active">
-					<a className="nav-link dropdown-toggle" href="#" id="dropdown02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Portfolio</a>
-					<ul className="dropdown-menu" aria-labelledby="dropdown02">
-						<li><a className="dropdown-item" href="portfolio-1.html">Portfolio Masonary</a></li>
-						<li><a className="dropdown-item" href="portfolio-2.html">Portfolio lightbox</a></li>
-						<li><a className="dropdown-item" href="portfolio-3.html">Portfolio 2 column</a></li>
-						<li><a className="dropdown-item" href="portfolio-single.html">Portfolio Details</a></li>
-					</ul>
-			  </li>
-			   <li className="nav-item dropdown">
-					<a className="nav-link dropdown-toggle" href="#" id="dropdown05" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Blog</a>
-					<ul className="dropdown-menu" aria-labelledby="dropdown05">
-						<li><a className="dropdown-item" href="blog-grid.html">Blog Grid</a></li>
-						<li><a className="dropdown-item" href="blog-sidebar.html">Blog with Sidebar</a></li>
-
-						<li><a className="dropdown-item" href="blog-single.html">Blog Single</a></li>
-					</ul>
-			  </li>
-			   <li className="nav-item"><a className="nav-link" href="contact.html">Contact</a></li>
+			 
 			</ul>
 		</div>
 	</div>

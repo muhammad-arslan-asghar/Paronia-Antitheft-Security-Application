@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
+import { GoogleMap, GoogleApiWrapper,InfoWindow, Marker } from 'google-maps-react';
 
 const mapStyles = {
   map: {
@@ -51,12 +52,21 @@ export class CurrentLocation extends React.Component {
       componentDidMount() {
 
         
-
-        axios.get('http://localhost:5000/api/commands/getloc')
-			.then(res=>{console.log("qwer");this.setState({ currentLocation:{ lat:res.data.location.latitude,lng:res.data.location.longitude } })})
-			 .catch();
+		const token=localStorage.getItem('jwt');
+		const token1=JSON.parse(token);
+		  const token2=JSON.parse(token1.config.data);
+	console.log("Pic"+token2.email)
+	
+	console.log("Hello: "+this.state.email)
+  axios.get('http://localhost:5000/api/commands/getloc?email='+token2.email)
+  .then(res=>{if(res.data.location){this.setState({ currentLocation:{ lat:res.data.location.latitude,lng:res.data.location.longitude } })}})
+   .catch();
+        
         if (this.props.centerAroundCurrentLocation) {
-          if (navigator && navigator.geolocation) {
+          if (navigator && navigator.geolocatio) {
+
+
+              
             navigator.geolocation.getCurrentPosition(pos => {
               const coords = pos.coords;
               this.setState({
@@ -71,6 +81,10 @@ export class CurrentLocation extends React.Component {
         this.loadMap();
       }
       loadMap() {
+
+      
+
+        
         if (this.props && this.props.google) {
           // checks if google is available
           const { google } = this.props;
@@ -118,10 +132,11 @@ export class CurrentLocation extends React.Component {
              Loading map...
            </div>
            {this.renderChildren()}
+         
          </div>
+         
        );
      }
-
 }
 export default CurrentLocation;
 

@@ -11,7 +11,7 @@ module.exports=function vaidateRegisterInput(data){
     data.password=!isEmpty(data.password) ? data.password : '';
     data.password2=!isEmpty(data.password2) ? data.password2 : '';
 
-
+    
 
     if(!Validator.isLength(data.name,{min:2,max:30})){
 

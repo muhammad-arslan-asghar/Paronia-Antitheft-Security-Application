@@ -6,7 +6,8 @@ export default class photo extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        img: []
+        img: [],
+        email:''
     };
 }
 arrayBufferToBase64(buffer) {
@@ -17,10 +18,19 @@ arrayBufferToBase64(buffer) {
 };
 
 componentDidMount() {
-  fetch('http://localhost:5000/api/uploads/getphoto')
+
+  const token=localStorage.getItem('jwt');
+		  const token1=JSON.parse(token);
+			const token2=JSON.parse(token1.config.data);
+      console.log("Pic"+token2.email)
+      this.setState({email:token2.email})
+      console.log("Hello: "+this.state.email)
+      
+
+  fetch('http://localhost:5000/api/uploads/getphoto?email='+token2.email)
   .then((res) => res.json())
   .then((data) => {
-    console.log(data[0].img.path);  
+    // console.log(data[0].img.path);  
       
     this.setState({
       img: data
@@ -56,7 +66,7 @@ componentDidMount() {
 
 	  <button className="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarsExample09" aria-controls="navbarsExample09" aria-expanded="false" aria-label="Toggle navigation">
 		<span className="ti-align-justify"></span>
-	  </button>
+	 </button>
   
 		  <div className="collapse navbar-collapse" id="navbarsExample09">
 			<ul className="navbar-nav ml-auto">
@@ -67,29 +77,11 @@ componentDidMount() {
 					<ul className="dropdown-menu" aria-labelledby="dropdown01">
 						<li><a className="dropdown-item" href="galleryphoto">Photo</a></li>
 						<li><a className="dropdown-item" href="galleryaudio">Audio</a></li>
-                        <li><a className="dropdown-item" href="galleryvideo">Video</a></li>
+                        {/* <li><a className="dropdown-item" href="galleryvideo">Video</a></li> */}
 					</ul>
 			  </li>
 
-			  <li className="nav-item dropdown active">
-					<a className="nav-link dropdown-toggle" href="#" id="dropdown02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Portfolio</a>
-					<ul className="dropdown-menu" aria-labelledby="dropdown02">
-						<li><a className="dropdown-item" href="portfolio-1.html">Portfolio Masonary</a></li>
-						<li><a className="dropdown-item" href="portfolio-2.html">Portfolio lightbox</a></li>
-						<li><a className="dropdown-item" href="portfolio-3.html">Portfolio 2 column</a></li>
-						<li><a className="dropdown-item" href="portfolio-single.html">Portfolio Details</a></li>
-					</ul>
-			  </li>
-			   <li className="nav-item dropdown">
-					<a className="nav-link dropdown-toggle" href="#" id="dropdown05" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Blog</a>
-					<ul className="dropdown-menu" aria-labelledby="dropdown05">
-						<li><a className="dropdown-item" href="blog-grid.html">Blog Grid</a></li>
-						<li><a className="dropdown-item" href="blog-sidebar.html">Blog with Sidebar</a></li>
-
-						<li><a className="dropdown-item" href="blog-single.html">Blog Single</a></li>
-					</ul>
-			  </li>
-			   <li className="nav-item"><a className="nav-link" href="contact.html">Contact</a></li>
+			 
 			</ul>
 		</div>
 	</div>
@@ -136,6 +128,7 @@ componentDidMount() {
    { this.state.img.map((item, key) =>(
           //  <li key={item.id}>{item.name}</li>
           <div className="col-lg-3 col-md-4 col-6">
+
           <a href="#" className="d-block mb-4 h-100">
               <img className="img-fluid img-thumbnail" src={'http://localhost:5000/'+ item.img.path } alt=""/>
     
@@ -146,43 +139,7 @@ componentDidMount() {
           ))}
       
 
-  <div className="col-lg-3 col-md-4 col-6">
-    <a href="#" className="d-block mb-4 h-100">
-          <img className="img-fluid img-thumbnail" src="https://source.unsplash.com/AvhMzHwiE_0/400x300" alt=""/>
-        </a>
-  </div>
-  
-  
-  <div className="col-lg-3 col-md-4 col-6">
-    <a href="#" className="d-block mb-4 h-100">
-          <img className="img-fluid img-thumbnail" src="https://source.unsplash.com/2gYsZUmockw/400x300" alt=""/>
-        </a>
-  </div>
-  <div className="col-lg-3 col-md-4 col-6">
-    <a href="#" className="d-block mb-4 h-100">
-          <img className="img-fluid img-thumbnail" src="https://source.unsplash.com/EMSDtjVHdQ8/400x300" alt=""/>
-        </a>
-  </div>
-  <div className="col-lg-3 col-md-4 col-6">
-    <a href="#" className="d-block mb-4 h-100">
-          <img className="img-fluid img-thumbnail" src="https://source.unsplash.com/8mUEy0ABdNE/400x300" alt=""/>
-        </a>
-  </div>
-  <div className="col-lg-3 col-md-4 col-6">
-    <a href="#" className="d-block mb-4 h-100">
-          <img className="img-fluid img-thumbnail" src="https://source.unsplash.com/G9Rfc1qccH4/400x300" alt=""/>
-        </a>
-  </div>
-  <div className="col-lg-3 col-md-4 col-6">
-    <a href="#" className="d-block mb-4 h-100">
-          <img className="img-fluid img-thumbnail" src="https://source.unsplash.com/aJeH0KcFkuc/400x300" alt=""/>
-        </a>
-  </div>
-  <div className="col-lg-3 col-md-4 col-6">
-    <a href="#" className="d-block mb-4 h-100">
-          <img className="img-fluid img-thumbnail" src="https://source.unsplash.com/p2TQ-3Bh3Oo/400x300" alt=""/>
-        </a>
-  </div>
+ 
 </div>
 
 </div>

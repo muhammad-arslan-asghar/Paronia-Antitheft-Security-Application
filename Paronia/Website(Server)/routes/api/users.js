@@ -20,6 +20,7 @@ const validateLoginInput=require('../../validation/login')
 
 //model
 const User=require('../../models/User');
+const { Console } = require('console');
 
 router.get('/test',(req,res)=> res.json({msg: "Users Know"}));
 
@@ -152,9 +153,10 @@ router.get('/test',(req,res)=> res.json({msg: "Users Know"}));
 
 router.post('/register',(req,res)=>{
     const {errors,isValid}= validateRegisterInput(req.body);
-    
+    console.log("Register")
     //check validation
     if(!isValid){
+      console.log("Validation")
         return res.json(errors);
     }
 
@@ -190,10 +192,15 @@ User.findOne({email: req.body.email}).then(user=>{
 
 //User login
 //return token
+router.get('/test',(req,res)=> res.json({msg: "Users Know"}));
 
 router.post('/login',(req,res)=>{
 
-    const {errors,isValid}= validateLoginInput(req.body);
+
+  console.log("Incoming")
+  console.log(req.body.password+"request") 
+   
+  const {errors,isValid}= validateLoginInput(req.body);
     
     //check validation
     if(!isValid){
@@ -213,7 +220,13 @@ const password=req.body.password;
 
         bcrypt.compare(password,user.password).then(isMatch=>{
           // console.log('Login Successfull'); 
+            var chnl=email;
+            exports.chnl=chnl;
+           console.log("Login: "+chnl)
+          
+        
           if(isMatch){
+           
             console.log('Login Successfull');
             const payload={ id: user.id, name:user.name }
 
@@ -229,7 +242,7 @@ const password=req.body.password;
               
           }
         else{
-            errors.password='password incorrect'
+            errors.password='password invalid'
             return res.json(errors);
         }
         });
@@ -237,6 +250,7 @@ const password=req.body.password;
 
 });
 //current user
+
 
 router.get('/current',passport.authenticate('jwt',{session:false}),
  (req,res)=>{
@@ -250,3 +264,4 @@ router.get('/current',passport.authenticate('jwt',{session:false}),
  });
 
 module.exports=router;
+
