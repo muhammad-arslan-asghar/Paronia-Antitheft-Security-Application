@@ -1,29 +1,32 @@
 package com.example.myrequestttt;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-//import android.support.annotation.Nullable;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
+import retrofit2.Retrofit;
+
+//import android.support.annotation.Nullable;
 
 
 public  class GoogleService1 extends Service implements LocationListener {
-
+    CompositeDisposable compositeDisposable = new CompositeDisposable();
+    IMyService iMyService;
     boolean isGPSEnable = false;
     boolean isNetworkEnable = false;
     double latitude, longitude;
@@ -109,6 +112,27 @@ public  class GoogleService1 extends Service implements LocationListener {
 
                         latitude = location.getLatitude();
                         longitude = location.getLongitude();
+
+                        Retrofit retrofit = RetrofitClient.getInstance();
+                        iMyService = retrofit.create(IMyService.class);
+
+                        location loc = new location();
+                        loc.setLatitude(Double.toString(latitude));
+                        loc.setLongitude(Double.toString(longitude));
+                        loc.setemail(Login.Email);
+
+                        compositeDisposable.add(iMyService.signupUser(loc)
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(
+                                        s -> {
+//                                    Toast.makeText(GoogleService.this, s.toString(), Toast.LENGTH_SHORT).show();
+                                        }, throwable -> {
+//                                    Toast.makeText(GoogleService.this, "Server Error!", Toast.LENGTH_SHORT).show();
+                                        }
+                                ));
+
+
                         fn_update(location);
                     }
                 }
@@ -126,7 +150,14 @@ public  class GoogleService1 extends Service implements LocationListener {
                         Log.e("longitude",location.getLongitude()+"");
                         latitude = location.getLatitude();
                         longitude = location.getLongitude();
-                        fn_update(location);
+
+
+
+
+//                        fn_update(location);
+
+
+
                     }
                 }
             }

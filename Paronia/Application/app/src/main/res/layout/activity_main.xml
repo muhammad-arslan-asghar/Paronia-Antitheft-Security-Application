@@ -22,6 +22,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed" />
+
+<!--    <Button-->
+<!--        android:id="@+id/buttonStoplocation"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="8dp"-->
+<!--        android:layout_marginEnd="8dp"-->
+<!--        android:layout_marginTop="388dp"-->
+<!--        android:background="@color/colorAccent"-->
+<!--        android:padding="16dp"-->
+<!--        android:text="Stop location Service"-->
+<!--        android:textColor="#fff"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/buttonStopService"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.5"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintVertical_chainStyle="packed" />-->
+
+
     <Button
         android:id="@+id/buttonStopService"
         android:layout_width="wrap_content"
@@ -40,24 +60,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonStartService"
         app:layout_constraintVertical_bias="0.218" />
-
-    <TextView
-        android:id="@+id/textView2"
+    <Button
+        android:id="@+id/buttonstartintent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        tools:layout_editor_absoluteX="176dp"
-        tools:layout_editor_absoluteY="291dp" />
-
-    <TextView
-        android:id="@+id/text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="260dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/colorAccent"
+        android:padding="16dp"
+        android:text="Start Location Service"
+        android:textColor="#fff"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_centerInParent="true"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonStartService"
+        app:layout_constraintVertical_bias="0.218" />
+
+
 
 </RelativeLayout>
